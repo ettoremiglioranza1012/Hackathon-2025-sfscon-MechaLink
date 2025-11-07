@@ -1,5 +1,7 @@
 import streamlit as st
 from pages import home, analytics, settings
+from datetime import datetime
+from utils.helpers import retrieve_and_plot_shop_analysis
 
 # Configure page settings
 st.set_page_config(
@@ -18,6 +20,11 @@ PAGES = {
 }
 
 selection = st.sidebar.radio("Go to", list(PAGES.keys()))
+
+retrieve_and_plot_shop_analysis(
+    start_time=datetime(2025, 10, 1), end_time=(datetime(2025, 10, 31))
+)
+
 
 # Render selected page
 page = PAGES[selection]
