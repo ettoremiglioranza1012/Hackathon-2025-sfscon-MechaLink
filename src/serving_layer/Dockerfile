@@ -1,4 +1,4 @@
-# Usa un’immagine Python leggera
+# Usa un'immagine Python leggera
 FROM python:3.12-slim
 
 # Imposta la directory di lavoro
@@ -7,11 +7,10 @@ WORKDIR /app
 # Copia i requisiti e installali
 RUN pip install fastapi psycopg[binary] pandas uvicorn
 
-
-# Copia tutto il codice sorgente (main.py, ecc.)
+# Copia il codice sorgente
 COPY . .
 
-# Espone la porta su cui gira l'API
+# Espone la porta dell'API
 EXPOSE 8000
 
 # Comando di avvio

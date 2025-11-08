@@ -1,7 +1,23 @@
 import streamlit as st
+<<<<<<< HEAD
 from pages import analytics, settings, task
 from utils.helpers import get_shops_from_api
 import os
+=======
+from pages import home, analytics, settings, delivery, industrial
+from datetime import datetime
+from utils.helpers import (
+    retrieve_and_plot_shop_analysis,
+    retrieve_and_plot_shop_cleaning,
+    retrieve_and_plot_shop_cleaning_detail,
+    retrieve_and_plot_shop_industrial,
+    retrieve_and_plot_shop_delivery,
+    retrieve_and_plot_shop_cruise,
+    retrieve_and_plot_shop_leading,
+    retrieve_and_plot_shop_robots_general,
+    retrieve_and_plot_shop_robots_operations,
+)
+>>>>>>> matteo/dashboard
 
 # Configure page settings
 st.set_page_config(
@@ -430,6 +446,7 @@ except Exception as e:
 st.sidebar.markdown("---")
 
 # Sidebar Navigation
+<<<<<<< HEAD
 st.sidebar.markdown("## 📚 Navigation")
 
 # Define page sections with organized structure
@@ -442,6 +459,15 @@ PAGE_SECTIONS = {
         "⚙️ Settings": settings,
         "📋 Tasks": task,
     }
+=======
+st.sidebar.title("📚 Navigation")
+PAGES = {
+    "🏠 Home": home,
+    "📈 Analytics": analytics,
+    "⚙️ Settings": settings,
+    "delivery": delivery,
+    "industrial":industrial
+>>>>>>> matteo/dashboard
 }
 
 # Render page sections with headers
