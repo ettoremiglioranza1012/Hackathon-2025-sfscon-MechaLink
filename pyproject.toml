@@ -1,7 +1,7 @@
 [project]
-name = "noi-hackaton"
+name = "MechaLink"
 version = "0.1.0"
-description = "Add your description here"
+description = "A comprehensive and extensive management platform for robot fleets"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
