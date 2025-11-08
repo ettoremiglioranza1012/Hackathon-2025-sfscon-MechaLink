@@ -13,13 +13,23 @@ services:
       - ./data:/var/lib/postgresql/data
 
   api:
-      build: ./api
-      environment:
-        DATABASE_URL: postgres://app:app@db:5432/appdb
-      depends_on:
-        - db
-      ports:
-        - "8000:8000"
+    build: ./src/serving_layer
+    environment:
+      DATABASE_URL: postgres://admin:admin@postgres:5432/mydb
+    depends_on:
+      - postgres
+    ports:
+      - "8000:8000"
+
+  streamlit:
+    build:
+      context: ./streamlit_app
+      dockerfile: Dockerfile
+    container_name: streamlit_app
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./streamlit_app:/app
 
 volumes: {}
 
