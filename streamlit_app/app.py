@@ -1,23 +1,7 @@
 import streamlit as st
-<<<<<<< HEAD
 from pages import analytics, settings, task
 from utils.helpers import get_shops_from_api
 import os
-=======
-from pages import home, analytics, settings, delivery, industrial
-from datetime import datetime
-from utils.helpers import (
-    retrieve_and_plot_shop_analysis,
-    retrieve_and_plot_shop_cleaning,
-    retrieve_and_plot_shop_cleaning_detail,
-    retrieve_and_plot_shop_industrial,
-    retrieve_and_plot_shop_delivery,
-    retrieve_and_plot_shop_cruise,
-    retrieve_and_plot_shop_leading,
-    retrieve_and_plot_shop_robots_general,
-    retrieve_and_plot_shop_robots_operations,
-)
->>>>>>> matteo/dashboard
 
 # Configure page settings
 st.set_page_config(
@@ -51,7 +35,7 @@ st.markdown("""
             padding: 0 !important;
             margin: 0 !important;
         }
-        
+
         /* Ensure sidebar is always visible and has proper width - prevent collapse */
         section[data-testid="stSidebar"] {
             min-width: 280px !important;
@@ -61,24 +45,24 @@ st.markdown("""
             visibility: visible !important;
             opacity: 1 !important;
         }
-        
+
         /* Prevent sidebar from collapsing - force width on all child elements */
         section[data-testid="stSidebar"] > div {
             width: 280px !important;
             min-width: 280px !important;
             max-width: 280px !important;
         }
-        
+
         /* Prevent the main content from expanding when sidebar would collapse */
         .main .block-container {
             max-width: calc(100% - 280px) !important;
         }
-        
+
         /* Hide any overlay or backdrop that might allow collapsing */
         .stApp > div:first-child {
             display: flex !important;
         }
-        
+
         /* Hide default Streamlit navigation (search field and page links) - AGGRESSIVE */
         [data-testid="stSidebarNav"],
         [data-testid="stSidebarNav"] *,
@@ -119,7 +103,7 @@ st.markdown("""
             position: absolute !important;
             left: -9999px !important;
         }
-        
+
         /* Style section headers */
         .sidebar-section-header {
             font-size: 0.75rem;
@@ -132,7 +116,7 @@ st.markdown("""
             padding-bottom: 0.5rem;
             border-bottom: 1px solid #e0e0e0;
         }
-        
+
         /* Style navigation buttons to look better */
         div[data-testid="stSidebar"] button[kind="primary"] {
             background-color: #e0e0e0;
@@ -140,30 +124,30 @@ st.markdown("""
             color: #1f1f1f;
             border: 1px solid #c0c0c0;
         }
-        
+
         div[data-testid="stSidebar"] button[kind="secondary"] {
             background-color: transparent;
             font-weight: normal;
             border: 1px solid transparent;
         }
-        
+
         div[data-testid="stSidebar"] button:hover {
             background-color: #f0f2f6;
             border-color: #d0d0d0;
         }
-        
+
         /* Improve selectbox styling */
         div[data-testid="stSidebar"] .stSelectbox > div > div {
             background-color: white;
         }
-        
+
         /* Add spacing to shop selection section */
         div[data-testid="stSidebar"] h3 {
             margin-top: 1rem;
             margin-bottom: 0.5rem;
         }
     </style>
-    
+
     <script>
         // Aggressively prevent sidebar collapse and remove default navigation
         function preventSidebarCollapse() {
@@ -183,7 +167,7 @@ st.markdown("""
                 btn.style.height = '0';
                 btn.remove();
             });
-            
+
             // Remove default Streamlit navigation (search field and page links) - AGGRESSIVE
             const sidebar = document.querySelector('section[data-testid="stSidebar"]');
             if (sidebar) {
@@ -202,7 +186,7 @@ st.markdown("""
                     '[class*="viewerBadge"]',
                     '[class*="stSidebarNav"]',
                 ];
-                
+
                 navSelectors.forEach(selector => {
                     const elements = sidebar.querySelectorAll(selector);
                     elements.forEach(el => {
@@ -212,7 +196,7 @@ st.markdown("""
                                           el.closest('.stSelectbox') ||
                                           el.tagName === 'SELECT' ||
                                           el.type === 'select-one';
-                        
+
                         if (!isSelectbox) {
                             el.style.display = 'none';
                             el.style.visibility = 'hidden';
@@ -223,7 +207,7 @@ st.markdown("""
                         }
                     });
                 });
-                
+
                 // Remove the first child div if it contains navigation
                 const sidebarChildren = sidebar.children;
                 if (sidebarChildren.length > 0) {
@@ -239,7 +223,7 @@ st.markdown("""
                         firstChild.remove();
                     }
                 }
-                
+
                 // Ensure sidebar is always visible
                 sidebar.style.minWidth = '280px';
                 sidebar.style.width = '280px';
@@ -247,7 +231,7 @@ st.markdown("""
                 sidebar.style.display = 'block';
                 sidebar.style.visibility = 'visible';
                 sidebar.style.opacity = '1';
-                
+
                 // Prevent any click events that might collapse it
                 sidebar.addEventListener('click', function(e) {
                     // Allow clicks inside sidebar, but prevent collapse triggers
@@ -263,7 +247,7 @@ st.markdown("""
                     }
                 }, true);
             }
-            
+
             // Monitor for any attempts to hide the sidebar
             const observer = new MutationObserver(function(mutations) {
                 mutations.forEach(function(mutation) {
@@ -277,7 +261,7 @@ st.markdown("""
                                 sidebar.style.width = '280px';
                             }
                         }
-                        
+
                         // Remove any new collapse buttons that appear
                         const newButtons = document.querySelectorAll(
                             'button[aria-label*="Close sidebar"], ' +
@@ -288,7 +272,7 @@ st.markdown("""
                                 btn.remove();
                             }
                         });
-                        
+
                         // Remove any new default navigation elements that appear - AGGRESSIVE
                         const sidebar = document.querySelector('section[data-testid="stSidebar"]');
                         if (sidebar) {
@@ -302,7 +286,7 @@ st.markdown("""
                                 'input[type="text"]',
                                 'input[type="search"]',
                             ];
-                            
+
                             navSelectors.forEach(selector => {
                                 const elements = sidebar.querySelectorAll(selector);
                                 elements.forEach(el => {
@@ -311,7 +295,7 @@ st.markdown("""
                                                       el.closest('.stSelectbox') ||
                                                       el.tagName === 'SELECT';
                                     const isButton = el.tagName === 'BUTTON' || el.closest('button');
-                                    
+
                                     if (!isSelectbox && !isButton) {
                                         el.style.display = 'none';
                                         el.style.position = 'absolute';
@@ -324,7 +308,7 @@ st.markdown("""
                     }
                 });
             });
-            
+
             // Observe the entire document for changes
             observer.observe(document.body, {
                 childList: true,
@@ -333,21 +317,21 @@ st.markdown("""
                 attributeFilter: ['style', 'class', 'aria-label', 'title']
             });
         }
-        
+
         // Run immediately
         preventSidebarCollapse();
-        
+
         // Run on DOMContentLoaded
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', preventSidebarCollapse);
         }
-        
+
         // Run on every page navigation/rerun
         window.addEventListener('load', preventSidebarCollapse);
-        
+
         // Run periodically to catch any dynamic changes
         setInterval(preventSidebarCollapse, 500);
-        
+
         // Override any Streamlit functions that might collapse the sidebar
         if (window.parent && window.parent.streamlit) {
             const originalRerun = window.parent.streamlit.rerun;
@@ -368,6 +352,7 @@ if "current_page" not in st.session_state:
 # Shop Selection Section - AT THE TOP
 st.sidebar.markdown("### 🏪 Shop Selection")
 
+
 # Get shops from API (cached to avoid repeated calls)
 @st.cache_data(ttl=300)  # Cache for 5 minutes
 def fetch_shops():
@@ -378,31 +363,32 @@ def fetch_shops():
         # Return empty list on error - error handling is done in the UI
         return []
 
+
 try:
     shops_data = fetch_shops()
-    
+
     if shops_data and len(shops_data) > 0:
         # Create options for selectbox
         # Handle different data formats from API
         shop_options = []
         shop_id_map = {}
-        
+
         for shop in shops_data:
             shop_id = shop.get('shop_id') or shop.get('id')
             shop_name = shop.get('shop_name') or shop.get('name') or f"Shop {shop_id}"
-            
+
             if shop_id:
                 display_name = f"{shop_name} ({shop_id})"
                 shop_options.append(display_name)
                 shop_id_map[display_name] = shop_id
-        
+
         # Initialize selected shop_id in session state
         if "selected_shop_id" not in st.session_state or st.session_state.selected_shop_id is None:
             if shop_options:
                 st.session_state.selected_shop_id = shop_id_map[shop_options[0]]
             else:
                 st.session_state.selected_shop_id = None
-        
+
         # Create selectbox
         if shop_options:
             # Find the index of the currently selected shop
@@ -411,13 +397,13 @@ try:
                 if shop_id == st.session_state.selected_shop_id:
                     current_shop_display = display_name
                     break
-            
+
             if current_shop_display and current_shop_display in shop_options:
                 current_index = shop_options.index(current_shop_display)
             else:
                 current_index = 0
                 st.session_state.selected_shop_id = shop_id_map[shop_options[0]]
-            
+
             selected_shop = st.sidebar.selectbox(
                 "Select Shop",
                 options=shop_options,
@@ -425,10 +411,10 @@ try:
                 key="shop_selectbox",
                 label_visibility="visible"
             )
-            
+
             # Update session state with selected shop_id
             st.session_state.selected_shop_id = shop_id_map[selected_shop]
-            
+
             # Display selected shop info
             st.sidebar.caption(f"Selected: {st.session_state.selected_shop_id}")
         else:
@@ -437,7 +423,7 @@ try:
     else:
         st.sidebar.warning("⚠️ No shops available. Please check your API connection.")
         st.session_state.selected_shop_id = None
-        
+
 except Exception as e:
     st.sidebar.error(f"❌ Error loading shops: {str(e)}")
     st.session_state.selected_shop_id = None
@@ -446,7 +432,6 @@ except Exception as e:
 st.sidebar.markdown("---")
 
 # Sidebar Navigation
-<<<<<<< HEAD
 st.sidebar.markdown("## 📚 Navigation")
 
 # Define page sections with organized structure
@@ -459,34 +444,25 @@ PAGE_SECTIONS = {
         "⚙️ Settings": settings,
         "📋 Tasks": task,
     }
-=======
-st.sidebar.title("📚 Navigation")
-PAGES = {
-    "🏠 Home": home,
-    "📈 Analytics": analytics,
-    "⚙️ Settings": settings,
-    "delivery": delivery,
-    "industrial":industrial
->>>>>>> matteo/dashboard
 }
 
 # Render page sections with headers
 for section_name, pages in PAGE_SECTIONS.items():
     st.sidebar.markdown(
-        f'<div class="sidebar-section-header">{section_name}</div>', 
+        f'<div class="sidebar-section-header">{section_name}</div>',
         unsafe_allow_html=True
     )
-    
+
     for page_name, page_module in pages.items():
         # Determine if this is the active page
         is_active = st.session_state.current_page == page_name
-        
+
         # Create a button for each page
         if st.sidebar.button(
-            page_name, 
-            key=f"nav_{page_name}", 
-            use_container_width=True,
-            type="primary" if is_active else "secondary"
+                page_name,
+                key=f"nav_{page_name}",
+                use_container_width=True,
+                type="primary" if is_active else "secondary"
         ):
             st.session_state.current_page = page_name
             st.rerun()
@@ -499,65 +475,66 @@ page_found = False
 if current_page_name == "🏠 Home":
     # Render Home page content directly
     st.title("🤖 Telmekom Robot Management Dashboard")
-    
+
     # Hero section with captivating introduction
     st.markdown("""
         ### Welcome to Your Command Center for Intelligent Robot Operations
-        
+
         Harness the power of real-time data analytics to optimize your robotic fleet. 
         This dashboard provides comprehensive insights into robot performance, task execution, 
         and operational efficiency—all in one place.
     """)
-    
+
     st.markdown("---")
-    
+
     # Main features section
     st.header("🎯 Key Features")
-    
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.markdown("""
             ### 📊 Control Robot Performance
-            
+
             Monitor and analyze your robot fleet's performance metrics in real-time:
-            
+
             - **Performance Analytics** - Track efficiency, uptime, and productivity metrics
             - **Resource Optimization** - Monitor power consumption, water usage, and operational costs
             - **Comparative Analysis** - Compare performance across different robot models and shops
             - **Historical Trends** - Identify patterns and optimize operations over time
-            
+
             Make data-driven decisions to maximize your robotic fleet's efficiency.
         """)
-    
+
     with col2:
         st.markdown("""
             ### 🔍 Task Visibility at a Glance
-            
+
             Get instant visibility into all robot operations across your network:
-            
+
             - **Real-Time Task Monitoring** - See what each robot is doing right now
             - **Task Completion Tracking** - Monitor cleaning, delivery, and industrial tasks
             - **Operational Status** - Quickly identify active, idle, or maintenance-required robots
             - **Multi-Shop Overview** - Manage operations across all your locations from one dashboard
-            
+
             Stay informed and respond quickly to operational needs.
         """)
-    
+
     st.markdown("---")
-    
+
     # Quick start guide
     st.header("🚀 Getting Started")
-    
+
     st.markdown("""
         1. **Select Your Shop** - Use the dropdown in the sidebar to choose which location to analyze
         2. **Explore Analytics** - Navigate to the Analytics page for detailed performance metrics
         3. **Monitor Tasks** - Check the Tasks page to see real-time robot operations
         4. **Customize Settings** - Adjust your preferences in the Settings page
     """)
-    
+
     # Call to action
-    st.info("👈 **Start by selecting a shop from the sidebar, then navigate to Analytics or Tasks to dive into the data!**")
+    st.info(
+        "👈 **Start by selecting a shop from the sidebar, then navigate to Analytics or Tasks to dive into the data!**")
     page_found = True
 else:
     # Render other pages

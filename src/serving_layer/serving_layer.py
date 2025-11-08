@@ -4,8 +4,6 @@ from psycopg.rows import dict_row
 import os
 
 app = FastAPI()
-
-<<<<<<< HEAD
 # Database connection string - uses service name 'postgres' in Docker, 'localhost' for local dev
 # Can be overridden with DB_DSN environment variable
 DB_HOST = os.getenv("DB_HOST", "postgres")  # Use 'postgres' service name in Docker, 'localhost' for local
@@ -18,10 +16,6 @@ DB_DSN = os.getenv(
     "DB_DSN",
     f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
-=======
-DB_DSN = "postgresql://admin:admin@postgres:5432/mydb"
->>>>>>> matteo/dashboard
-
 @app.get("/shops")
 def get_shops():
     with psycopg.connect(DB_DSN) as conn:
@@ -30,10 +24,6 @@ def get_shops():
             rows = cur.fetchall()
     return {"shops": rows}
 
-<<<<<<< HEAD
-=======
-
->>>>>>> matteo/dashboard
 @app.get("/delivery/greeter")
 def get_delivery_greeter(shop_id: int | None = None, limit: int = 50):
     query = """
