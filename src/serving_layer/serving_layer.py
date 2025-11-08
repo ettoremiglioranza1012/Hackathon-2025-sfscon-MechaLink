@@ -1,10 +1,22 @@
 from fastapi import FastAPI
 import psycopg
 from psycopg.rows import dict_row
+import os
 
 app = FastAPI()
 
-DB_DSN = "postgresql://admin:admin@localhost:5432/mydb"
+# Database connection string - uses service name 'postgres' in Docker, 'localhost' for local dev
+# Can be overridden with DB_DSN environment variable
+DB_HOST = os.getenv("DB_HOST", "postgres")  # Use 'postgres' service name in Docker, 'localhost' for local
+DB_USER = os.getenv("DB_USER", "admin")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "admin")
+DB_NAME = os.getenv("DB_NAME", "mydb")
+DB_PORT = os.getenv("DB_PORT", "5432")
+
+DB_DSN = os.getenv(
+    "DB_DSN",
+    f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
 @app.get("/shops")
 def get_shops():
@@ -13,14 +25,6 @@ def get_shops():
             cur.execute("SELECT shop_id, shop_name FROM shop ORDER BY shop_name;")
             rows = cur.fetchall()
     return {"shops": rows}
-
-from fastapi import FastAPI
-import psycopg
-from psycopg.rows import dict_row
-
-DB_DSN = "postgresql://admin:admin@localhost:5432/mydb"
-
-app = FastAPI()
 
 @app.get("/delivery/greeter")
 def get_delivery_greeter(shop_id: int | None = None, limit: int = 50):
