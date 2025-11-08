@@ -25,6 +25,7 @@
 - [Database Schema](#-database-schema)
 - [Development](#-development)
 - [License](#-license)
+- [Additional Resources](#-additional-resources)
 
 ---
 
