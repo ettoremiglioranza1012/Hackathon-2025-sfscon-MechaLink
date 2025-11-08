@@ -638,33 +638,13 @@ if st.button("Send Email Report"):
     send_email_report(recipient, data)
 ```
 
-### 10. **Integration Customization**
-
-MechaLink can integrate with:
-
-- ERP systems
-- Warehouse Management Systems (WMS)
-- Restaurant Point of Sale (POS)
-- Building Management Systems (BMS)
-- IoT platforms
-- Analytics tools (Tableau, Power BI)
-- Messaging systems (Slack, Teams)
-
 ---
-
-## 🔌 API Documentation
 
 ### Base URL
 
 ```
 http://localhost:8000
 ```
-
-### Interactive Documentation
-
-Access Swagger UI at: `http://localhost:8000/docs`
-
-Access ReDoc at: `http://localhost:8000/redoc`
 
 ### Key Endpoints
 
@@ -843,7 +823,7 @@ mechalink/
 
    ```bash
    # Rebuild containers
-   docker-compose up --build
+   make build-app
    ```
 
 3. **Database Migrations**
@@ -891,7 +871,34 @@ mechalink/
 
 ## 📚 Additional Resources
 
-- **Video Tutorial**: [Coming Soon]
+### Demo GIFs
+
+We put up a collection of GIFs to understand the basic functionality of our solution.
+
+#### Home
+
+![home-demo](assets/GIFs/home-demo.gif)
+
+#### Analytics
+
+![analytics-demo](assets/GIFs/analytics-demo.gif)
+
+#### Cleaning Task
+
+![cleaning-demo](assets/GIFs/cleaning-demo.gif)
+
+#### Delivery Task
+
+![delivery-demo](assets/GIFs/delivering-demo.gif)
+![delivery-demo](assets/GIFs/delivery-demo.gif)
+
+#### Lifting Task
+
+![lifting-demo](assets/GIFs/lifting-demo.gif)
+
+#### Industrial Analysis
+
+![industrial-demo](assets/GIFs/industrial-demo.gif)
 
 ---
 
