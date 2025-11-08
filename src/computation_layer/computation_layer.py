@@ -1,85 +1,127 @@
-import psycopg
-from psycopg.rows import dict_row
-from datetime import datetime, timezone, timedelta
-import json
 import os
 import time
+from datetime import datetime, timedelta
+from typing import Any, Optional
+
+import psycopg
+from psycopg.rows import dict_row
 
 DB_DSN = os.getenv("DB_DSN", "postgresql://admin:admin@postgres:5432/mydb")
 
-def get_avg_duration_sec(conn, table_name: str, shop_id: int | None):
-    base = f"""
-        SELECT EXTRACT(EPOCH FROM (arrival_time - begin_time)) AS sec
-        FROM {table_name}
-        WHERE arrival_time IS NOT NULL
-          AND begin_time IS NOT NULL
-    """
-    params = []
-    if shop_id is not None:
-        base += " AND shop_id = %s"
-        params.append(shop_id)
-    base += " ORDER BY arrival_time DESC LIMIT 200"
+# mapping colonne
+DURATION_COLUMNS = {
+    "robot_delivery_greeter_task": "cur_duration",
+    "robot_delivery_call_task": "cur_duration",
+    "robot_industrial_lifting_task": "cur_duration",
+    "robot_delivery_recovery_task": "duration",
+}
 
-    with conn.cursor() as cur:
-        cur.execute(base, params)
-        rows = cur.fetchall()
+PK_COLUMNS = {
+    "robot_delivery_greeter_task": "id",
+    "robot_delivery_call_task": "id",
+    "robot_delivery_recovery_task": "id",
+    "robot_industrial_lifting_task": "id",
+}
 
-    secs = [r[0] for r in rows if r[0]]
-    if not secs:
-        return 300.0
-    return sum(secs) / len(secs)
+FALLBACK_SECONDS = 300  # 5 minuti
 
-def predict_eta(row: dict, avg_sec: float):
-    # se già finita
-    if row.get("arrival_time"):
-        return 0, row["arrival_time"]
+def _parse_dt(value: Any) -> datetime:
+    if isinstance(value, datetime):
+        return value
+    for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(str(value), fmt)
+        except ValueError:
+            continue
+    raise ValueError(f"datetime non valido: {value!r}")
 
-    now = datetime.now(timezone.utc)
-    begin_time = row.get("begin_time") or now
-    elapsed = (now - begin_time).total_seconds()
-    remaining = max(avg_sec - elapsed, 15.0)
-    eta = now + timedelta(seconds=remaining)
-    return int(remaining), eta
+def get_baseline_duration_seconds(conn, table, sn, shop_id):
+    duration_col = DURATION_COLUMNS.get(table)
+    if not duration_col:
+        return FALLBACK_SECONDS
 
-def fetch_row(conn, table_name: str, task_id: int):
     with conn.cursor(row_factory=dict_row) as cur:
-        cur.execute(f"SELECT * FROM {table_name} WHERE id = %s", (task_id,))
-        return cur.fetchone()
+        # media per SN
+        if sn:
+            cur.execute(
+                f"SELECT avg({duration_col}) AS avg_d FROM {table} WHERE sn=%s AND {duration_col} IS NOT NULL",
+                (sn,),
+            )
+            r = cur.fetchone()
+            if r and r["avg_d"]:
+                return int(r["avg_d"])
 
-def upsert_eta(conn, task_id: int, table_name: str, remaining: int, eta):
+        # media per shop
+        if shop_id:
+            cur.execute(
+                f"SELECT avg({duration_col}) AS avg_d FROM {table} WHERE shop_id=%s AND {duration_col} IS NOT NULL",
+                (shop_id,),
+            )
+            r = cur.fetchone()
+            if r and r["avg_d"]:
+                return int(r["avg_d"])
+
+        # media globale
+        cur.execute(f"SELECT avg({duration_col}) AS avg_d FROM {table} WHERE {duration_col} IS NOT NULL")
+        r = cur.fetchone()
+        if r and r["avg_d"]:
+            return int(r["avg_d"])
+
+    return FALLBACK_SECONDS
+
+def insert_eta(conn, src_table, src_pk, task_id, shop_id, sn, ending_time):
     with conn.cursor() as cur:
-        cur.execute("""
-            INSERT INTO task_eta (task_id, predicted_end_ts, predicted_remaining_sec)
-            VALUES (%s, %s, %s, NOW())
-            ON CONFLICT (task_id)
-            DO UPDATE SET
-                predicted_end_ts = EXCLUDED.predicted_end_ts,
-                predicted_remaining_sec = EXCLUDED.predicted_remaining_sec
-        """, (task_id, table_name, eta, remaining))
+        cur.execute(
+            """
+            INSERT INTO task_eta (src_table, src_pk, task_id, shop_id, sn, ending_time)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (src_table, src_pk, task_id, shop_id, sn, ending_time),
+        )
     conn.commit()
 
-def listen():
+def process_new_rows(conn, table):
+    """legge righe recenti e scrive ETA"""
+    pk_col = PK_COLUMNS[table]
+    duration_col = DURATION_COLUMNS[table]
+
+    with conn.cursor(row_factory=dict_row) as cur:
+        cur.execute(
+            f"""
+            SELECT * FROM {table}
+            WHERE inserted_at > NOW() - INTERVAL '30 seconds'
+            """
+        )
+        rows = cur.fetchall()
+
+    for row in rows:
+        sn = row.get("sn")
+        shop_id = row.get("shop_id")
+        task_id = row.get("task_id")
+        src_pk = row.get(pk_col)
+        start_raw = row.get("begin_time") or row.get("task_time")
+        if not start_raw:
+            continue
+        try:
+            start_time = _parse_dt(start_raw)
+        except ValueError:
+            continue
+
+        baseline = get_baseline_duration_seconds(conn, table, sn, shop_id)
+        cur_dur = row.get(duration_col)
+        dur = int(float(cur_dur)) if cur_dur and float(cur_dur) > 0 else baseline
+        ending_time = start_time + timedelta(seconds=dur)
+
+        insert_eta(conn, table, src_pk, task_id, shop_id, sn, ending_time)
+        print(f"[ETA] {table} id={src_pk} fine prevista: {ending_time}")
+
+def main():
+    print("Serving layer ETA avviato...")
     with psycopg.connect(DB_DSN) as conn:
-        conn.execute("LISTEN new_delivery_task;")
-        print("listening on new_delivery_task")
         while True:
-            conn.poll()
-            while conn.notifies:
-                notify = conn.notifies.pop(0)
-                payload = json.loads(notify.payload)
-                table = payload["table"]
-                task_id = payload["id"]
-                shop_id = payload.get("shop_id")
-
-                # ricarico riga
-                row = fetch_row(conn, table, task_id)
-                if not row:
-                    continue
-
-                avg_sec = get_avg_duration_sec(conn, table, shop_id)
-                remaining, eta = predict_eta(row, avg_sec)
-                upsert_eta(conn, task_id, table, remaining, eta)
-            time.sleep(0.5)
+            for table in DURATION_COLUMNS.keys():
+                process_new_rows(conn, table)
+            time.sleep(10)
 
 if __name__ == "__main__":
-    listen()
+    main()
