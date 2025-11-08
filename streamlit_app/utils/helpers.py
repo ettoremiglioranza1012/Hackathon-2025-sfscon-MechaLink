@@ -130,7 +130,6 @@ class ApiRetriever:
                 f"Call to {self.resource_uri} failed with code {res.status_code}"
             )
 
-
 def show_info_box(title, message):
     st.info(f"**{title}**: {message}")
 
@@ -192,6 +191,213 @@ def get_shops_from_api(api_base_url: str | None = None) -> list[dict]:
         # Return empty list on error - error handling is done in the UI
         return []
 
+def demo_shop_analysis():
+    example = {
+  "message": "SUCCESS",
+  "trace_id": "APID6s8FdbmWX5DPxwtN3HHWzU8WWHSk0AEtc_dd306778-7525-4408-a095-61494493c428",
+  "data": {
+    "summary": {
+      "lively_count": 1,
+      "silent_count": 0,
+      "new_count": 0,
+      "total_count": 1
+    },
+    "qoq": {
+      "lively_count": 1,
+      "silent_count": 0,
+      "new_count": 0,
+      "total_count": 1
+    },
+    "chart": [
+      {
+        "task_time": "2025-10-18",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-19",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-20",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-21",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-22",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-23",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-24",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-25",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-26",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-27",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-28",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      }
+    ],
+    "qoq_chart": [
+      {
+        "task_time": "2025-10-08",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-09",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-10",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-11",
+        "lively_count": 0,
+        "silent_count": 1,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-12",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-13",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-14",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-15",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-16",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-17",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      },
+      {
+        "task_time": "2025-10-18",
+        "lively_count": 1,
+        "silent_count": 0,
+        "new_count": 0,
+        "total_count": 1
+      }
+    ]
+  }
+}
+    df = pd.DataFrame(example["data"]["chart"])
+
+    # Create figure and plot with proper labels
+    fig = px.line(
+        df,
+        x="task_time",
+        y=["lively_count", "silent_count", "new_count"],
+        title="Shop Activity Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "lively_count": "Lively Count",
+            "silent_count": "Silent Count",
+            "new_count": "New Count",
+            "value": "Count",
+            "variable": "Activity Type"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Count",
+        legend_title="Activity Type",
+        hovermode="x unified"
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
 
 def retrieve_and_plot_shop_analysis(
     start_time: datetime,
@@ -304,6 +510,240 @@ def retrieve_and_plot_shop_cleaning_detail(
     if __name__ != "__main__":
         st.plotly_chart(fig, use_container_width=True)
 
+def demo_shop_cleaning():
+    example = {
+  "message": "SUCCESS",
+  "trace_id": "APID6s8FdbmWX5DPxwtN3HHWzU8WWHSk0AEtc_550d2a95-00f1-474c-9721-a8cb8d88c491",
+  "data": {
+    "summary": {
+      "task_count": 11,
+      "area": 429.57,
+      "duration": 1.52,
+      "power_consumption": 0.25,
+      "water_consumption": 0
+    },
+    "qoq": {
+      "task_count": 34,
+      "area": 986.47,
+      "duration": 2.65,
+      "power_consumption": 0.43,
+      "water_consumption": 0
+    },
+    "chart": [
+      {
+        "task_time": "2025-10-18",
+        "area": 191.25,
+        "duration": 0.69,
+        "power_consumption": 0.1,
+        "water_consumption": 0,
+        "task_count": 5
+      },
+      {
+        "task_time": "2025-10-19",
+        "area": 41.81,
+        "duration": 0.14,
+        "power_consumption": 0.01,
+        "water_consumption": 0,
+        "task_count": 1
+      },
+      {
+        "task_time": "2025-10-20",
+        "area": 170.34,
+        "duration": 0.6,
+        "power_consumption": 0.11,
+        "water_consumption": 0,
+        "task_count": 4
+      },
+      {
+        "task_time": "2025-10-21",
+        "area": 26.17,
+        "duration": 0.09,
+        "power_consumption": 0.03,
+        "water_consumption": 0,
+        "task_count": 1
+      },
+      {
+        "task_time": "2025-10-22",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-23",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-24",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-25",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-26",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-27",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-28",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      }
+    ],
+    "qoq_chart": [
+      {
+        "task_time": "2025-10-08",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-09",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-10",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-11",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-12",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-13",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-14",
+        "area": 0,
+        "duration": 0,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 0
+      },
+      {
+        "task_time": "2025-10-15",
+        "area": 3.72,
+        "duration": 0,
+        "power_consumption": 0.01,
+        "water_consumption": 0,
+        "task_count": 7
+      },
+      {
+        "task_time": "2025-10-16",
+        "area": 398.94,
+        "duration": 0.66,
+        "power_consumption": 0.1,
+        "water_consumption": 0,
+        "task_count": 13
+      },
+      {
+        "task_time": "2025-10-17",
+        "area": 414.17,
+        "duration": 1.42,
+        "power_consumption": 0.32,
+        "water_consumption": 0,
+        "task_count": 10
+      },
+      {
+        "task_time": "2025-10-18",
+        "area": 169.64,
+        "duration": 0.58,
+        "power_consumption": 0,
+        "water_consumption": 0,
+        "task_count": 4
+      }
+    ]
+  }
+}
+    df = pd.DataFrame(example["data"]["chart"])
+
+    vars_to_plot = [
+        "area",
+        "duration",
+        "power_consumption",
+        "water_consumption",
+    ]
+
+    # Create figure and plot with proper labels
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task - Area Coverage Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "area": "Area Cleaned (m²)",
+            "value": "Area (m²)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Area Cleaned (m²)",
+        hovermode="x unified"
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
 
 def retrieve_and_plot_shop_cleaning(
     start_time: datetime,
@@ -656,6 +1096,174 @@ def retrieve_and_plot_shop_solicit(
         st.plotly_chart(fig, use_container_width=True, key="solicit")
     else:
         print(df.head())
+
+def demo_shop_robots_general():
+    example = {
+  "code": 200,
+  "message": "ok",
+  "data": {
+    "summary": {
+      "boot_count": 25,
+      "total_count": 24,
+      "bind_count": 37,
+      "active_count": 36,
+      "lively_rate": 104.17
+    },
+    "qoq": {
+      "boot_count": 0,
+      "total_count": 0,
+      "bind_count": 0,
+      "active_count": 0,
+      "lively_rate": 0
+    },
+    "qoq_percent": {
+      "active_count": 0,
+      "bind_count": 0,
+      "boot_count": 0
+    },
+    "chart": {
+      "62": {
+        "product_code": "62",
+        "product_name": "BellaBot",
+        "bind_count": 2,
+        "active_count": 1,
+        "bind_rate": 5.41,
+        "active_rate": 2.78
+      },
+      "67": {
+        "product_code": "67",
+        "product_name": "KettyBot",
+        "bind_count": 2,
+        "active_count": 2,
+        "bind_rate": 5.41,
+        "active_rate": 5.56
+      },
+      "69": {
+        "product_code": "69",
+        "product_name": "PUDU CC1",
+        "bind_count": 8,
+        "active_count": 8,
+        "bind_rate": 21.62,
+        "active_rate": 22.22
+      },
+      "73": {
+        "product_code": "73",
+        "product_name": "PuduBot2",
+        "bind_count": 2,
+        "active_count": 2,
+        "bind_rate": 5.41,
+        "active_rate": 5.56
+      },
+      "75": {
+        "product_code": "75",
+        "product_name": "PUDU SH1",
+        "bind_count": 3,
+        "active_count": 3,
+        "bind_rate": 8.11,
+        "active_rate": 8.33
+      },
+      "76": {
+        "product_code": "76",
+        "product_name": "BellaBot Pro",
+        "bind_count": 4,
+        "active_count": 4,
+        "bind_rate": 10.81,
+        "active_rate": 11.11
+      },
+      "78": {
+        "product_code": "78",
+        "product_name": "PUDU T300",
+        "bind_count": 4,
+        "active_count": 4,
+        "bind_rate": 10.81,
+        "active_rate": 11.11
+      },
+      "79": {
+        "product_code": "79",
+        "product_name": "PUDU MT1",
+        "bind_count": 4,
+        "active_count": 4,
+        "bind_rate": 10.81,
+        "active_rate": 11.11
+      },
+      "80": {
+        "product_code": "80",
+        "product_name": "PUDU CC1 Pro",
+        "bind_count": 1,
+        "active_count": 1,
+        "bind_rate": 2.7,
+        "active_rate": 2.78
+      },
+      "81": {
+        "product_code": "81",
+        "product_name": "FlashBot 2025",
+        "bind_count": 4,
+        "active_count": 4,
+        "bind_rate": 10.81,
+        "active_rate": 11.11
+      },
+      "90": {
+        "product_code": "90",
+        "product_name": "PUDU MT1 Vac",
+        "bind_count": 1,
+        "active_count": 1,
+        "bind_rate": 2.7,
+        "active_rate": 2.78
+      },
+      "97": {
+        "product_code": "97",
+        "product_name": "PUDU MT1 Max",
+        "bind_count": 1,
+        "active_count": 1,
+        "bind_rate": 2.7,
+        "active_rate": 2.78
+      },
+      "99": {
+        "product_code": "99",
+        "product_name": "PUDU T600 Underride",
+        "bind_count": 1,
+        "active_count": 1,
+        "bind_rate": 2.7,
+        "active_rate": 2.78
+      }
+    }
+  }
+}
+    # Convert the chart dictionary to a list of values for DataFrame
+    chart_data = list(example["data"]["chart"].values())
+    df = pd.DataFrame(chart_data)
+
+    vars_to_plot = ["bind_count", "active_count", "bind_rate", "active_rate"]
+
+    # Create figure and plot with proper labels
+    try:
+        fig = px.bar(
+            df,
+            x="product_name",
+            y=[vars_to_plot[0], vars_to_plot[1]],
+            title="Robot Statistics - Bind and Active Counts by Model",
+            labels={
+                "product_name": "Robot Model",
+                "bind_count": "Bound Robots",
+                "active_count": "Active Robots",
+                "value": "Count"
+            },
+            barmode="group"
+        )
+        
+        # Update layout for better readability
+        fig.update_layout(
+            xaxis_title="Robot Model",
+            yaxis_title="Number of Robots",
+            legend_title="Metric",
+            hovermode="x unified"
+        )
+        
+        if __name__ != "__main__":
+            st.plotly_chart(fig, use_container_width=True, key="demo_robots_general")
+
+    except Exception:
+        st.warning(WARNING_MESSAGE)
 
 
 def retrieve_and_plot_shop_robots_general(
