@@ -64,7 +64,7 @@
 - **Task Management** - Track greeter, recovery, and call tasks
 - **Performance KPIs** - Duration, mileage, and stay duration metrics
 
-![Delivery-demo](./assets/GIFs/CleanShot 2025-11-08 at 11.13.23.gif)
+![Delivery-demo](./assets/GIFs/delivering-demo.gif)
 
 #### 🏭 Industrial Robot Monitoring
 
