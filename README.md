@@ -22,6 +22,7 @@
 - [Dashboard Capabilities](#dashboard-capabilities)
 - [Customization](#customization)
 - [API Documentation](#api-documentation)
+- [Troubleshooting](#troubleshooting)
 - [Database Schema](#database-schema)
 - [Development](#development)
 - [License](#license)
@@ -711,11 +712,11 @@ curl -X GET "http://localhost:8000/delivery/greeter?shop_id=520400008&limit=50" 
 
 ---
 
-# Troubleshooting
+## Troubleshooting
 
 This section contains useful info on how to fix known bugs.
 
-## Volumes not loading correctly on Postgres startup
+### Volumes not loading correctly on Postgres startup
 
 At times, when running the program using `make run-app` Docker might complain about not being able to mount some of its volumes.
 
