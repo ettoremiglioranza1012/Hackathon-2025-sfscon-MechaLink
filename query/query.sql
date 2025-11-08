@@ -273,4 +273,3 @@ CREATE TABLE IF NOT EXISTS robot_movement (
     position_z  DOUBLE PRECISION,
     inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
