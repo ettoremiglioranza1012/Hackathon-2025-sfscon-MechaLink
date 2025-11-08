@@ -1,5 +1,5 @@
 import streamlit as st
-from pages import analytics, settings, task
+from pages import analytics, settings, cleaning, delivery, industrial
 from utils.helpers import get_shops_from_api
 import os
 
@@ -440,9 +440,13 @@ PAGE_SECTIONS = {
         "🏠 Home": None,  # Home page is rendered directly in app.py
         "📈 Analytics": analytics,
     },
+    "Task":{
+        "🚚 Delivery": delivery,
+        "🏭 Industrial": industrial,
+        "🧼 Cleaning": cleaning
+    },
     "Configuration": {
         "⚙️ Settings": settings,
-        "📋 Tasks": task,
     }
 }
 

@@ -4,7 +4,7 @@ import pandas as pd
 
 def render():
     # Titolo
-    st.title("Robot Task Dashboard")
+    st.title("cleaning")
 
     # Tabs principali
     tabs = st.tabs(["🧹 Cleaning", "📦 Delivery", "🏗️ Lifting"])
