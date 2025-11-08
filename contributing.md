@@ -18,7 +18,7 @@ We welcome contributions! Here's how you can help:
 
 ---
 
-## 📞 Support
+## Support
 
 Need help? We're here for you:
 
