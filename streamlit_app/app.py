@@ -1,5 +1,11 @@
 import streamlit as st
-from pages import analytics, settings, task, robotCleaningMonitoring, robotDeliveringMonitoring, robotLiftingMonitoring
+from pages import (
+    analytics,
+    settings,
+    robotCleaningMonitoring,
+    robotDeliveringMonitoring,
+    robotLiftingMonitoring,
+)
 from pages import delivery, industrial
 from utils.helpers import get_shops_from_api
 import os
@@ -13,7 +19,8 @@ st.set_page_config(
 )
 
 # Custom CSS and JavaScript to make sidebar non-collapsible and improve styling
-st.markdown("""
+st.markdown(
+    """
     <style>
         /* Hide ALL possible sidebar collapse buttons - comprehensive selectors */
         button[title="Close sidebar"],
@@ -344,7 +351,9 @@ st.markdown("""
             }
         }
     </script>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # Initialize session state for page navigation
 if "current_page" not in st.session_state:
@@ -375,8 +384,8 @@ try:
         shop_id_map = {}
 
         for shop in shops_data:
-            shop_id = shop.get('shop_id') or shop.get('id')
-            shop_name = shop.get('shop_name') or shop.get('name') or f"Shop {shop_id}"
+            shop_id = shop.get("shop_id") or shop.get("id")
+            shop_name = shop.get("shop_name") or shop.get("name") or f"Shop {shop_id}"
 
             if shop_id:
                 display_name = f"{shop_name} ({shop_id})"
@@ -384,7 +393,10 @@ try:
                 shop_id_map[display_name] = shop_id
 
         # Initialize selected shop_id in session state
-        if "selected_shop_id" not in st.session_state or st.session_state.selected_shop_id is None:
+        if (
+            "selected_shop_id" not in st.session_state
+            or st.session_state.selected_shop_id is None
+        ):
             if shop_options:
                 st.session_state.selected_shop_id = shop_id_map[shop_options[0]]
             else:
@@ -410,7 +422,7 @@ try:
                 options=shop_options,
                 index=current_index,
                 key="shop_selectbox",
-                label_visibility="visible"
+                label_visibility="visible",
             )
 
             # Update session state with selected shop_id
@@ -444,22 +456,20 @@ PAGE_SECTIONS = {
         "🤖 Delivery Monitoring": robotDeliveringMonitoring,
         "🤖 Inventory Monitoring": robotLiftingMonitoring,
     },
-    "Task":{
+    "Task": {
         "🚚 Delivery": delivery,
         "🏭 Industrial": industrial,
-        "🧼 Cleaning": cleaning
     },
     "Configuration": {
         "⚙️ Settings": settings,
-
-    }
+    },
 }
 
 # Render page sections with headers
 for section_name, pages in PAGE_SECTIONS.items():
     st.sidebar.markdown(
         f'<div class="sidebar-section-header">{section_name}</div>',
-        unsafe_allow_html=True
+        unsafe_allow_html=True,
     )
 
     for page_name, page_module in pages.items():
@@ -468,10 +478,10 @@ for section_name, pages in PAGE_SECTIONS.items():
 
         # Create a button for each page
         if st.sidebar.button(
-                page_name,
-                key=f"nav_{page_name}",
-                use_container_width=True,
-                type="primary" if is_active else "secondary"
+            page_name,
+            key=f"nav_{page_name}",
+            use_container_width=True,
+            type="primary" if is_active else "secondary",
         ):
             st.session_state.current_page = page_name
             st.rerun()
@@ -543,7 +553,8 @@ if current_page_name == "🏠 Home":
 
     # Call to action
     st.info(
-        "👈 **Start by selecting a shop from the sidebar, then navigate to Analytics or Tasks to dive into the data!**")
+        "👈 **Start by selecting a shop from the sidebar, then navigate to Analytics or Tasks to dive into the data!**"
+    )
     page_found = True
 else:
     # Render other pages
