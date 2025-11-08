@@ -5,6 +5,7 @@ from pages import (
     robotCleaningMonitoring,
     robotDeliveringMonitoring,
     robotLiftingMonitoring,
+    predictiveAnalytics
 )
 from pages import delivery, industrial
 from utils.helpers import get_shops_from_api
@@ -455,6 +456,7 @@ PAGE_SECTIONS = {
         "🤖 Cleaning Monitoring": robotCleaningMonitoring,
         "🤖 Delivery Monitoring": robotDeliveringMonitoring,
         "🤖 Inventory Monitoring": robotLiftingMonitoring,
+        "📊 Predictive Analytics": predictiveAnalytics,
     },
     "Task": {
         "🚚 Delivery": delivery,
