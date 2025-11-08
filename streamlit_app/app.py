@@ -1,5 +1,5 @@
 import streamlit as st
-from pages import home, analytics, settings
+from pages import home, analytics, settings, task
 from datetime import datetime
 from utils.helpers import (
     retrieve_and_plot_shop_analysis,
@@ -27,6 +27,7 @@ PAGES = {
     "🏠 Home": home,
     "📈 Analytics": analytics,
     "⚙️ Settings": settings,
+    "tasks": task
 }
 
 selection = st.sidebar.radio("Go to", list(PAGES.keys()))
