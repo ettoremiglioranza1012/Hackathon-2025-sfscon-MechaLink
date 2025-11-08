@@ -15,17 +15,18 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [Architecture](#-architecture)
-- [Getting Started](#-getting-started)
-- [Dashboard Capabilities](#-dashboard-capabilities)
-- [Customization](#-customization)
-- [API Documentation](#-api-documentation)
-- [Database Schema](#-database-schema)
-- [Development](#-development)
-- [License](#-license)
-- [Additional Resources](#-additional-resources)
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Architecture](#architecture)
+- [Getting Started](#getting-started)
+- [Dashboard Capabilities](#dashboard-capabilities)
+- [Customization](#customization)
+- [API Documentation](#api-documentation)
+- [Database Schema](#database-schema)
+- [Development](#development)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+- [Additional Resources](#additional-resources)
 
 ---
 
@@ -641,6 +642,8 @@ if st.button("Send Email Report"):
 
 ---
 
+## 🔌 API Documentation
+
 ### Base URL
 
 ```
@@ -851,7 +854,7 @@ mechalink/
 
 ## 📄 License
 
-## This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
