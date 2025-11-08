@@ -18,6 +18,7 @@ try:
 except Exception:
     raise Exception("Unable to retrieve API KEY")
 
+WARNING_MESSAGE = "Ooops, it appears a problem occurred with this plot"
 BASE_ADDRESS = "https://sfscon.tmkhosting.net"
 
 # IMPORTANT: all these endpoints only require three inputs:
@@ -182,14 +183,451 @@ def retrieve_and_plot_shop_analysis(
         st.plotly_chart(fig, use_container_width=True)
 
 
+def retrieve_and_plot_shop_cleaning_detail(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/cleaning/detail")
+    retriever = ApiRetriever(
+        # f"https://sfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["chart"])
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=["running_task_count"],
+        title="Cleaning Details",
+        labels={"task_time": "Date", "running_task_count": "Count"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+
+
+def retrieve_and_plot_shop_cleaning(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/cleaning")
+    retriever = ApiRetriever(
+        # f"https://sfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = [
+        "area",
+        "duration",
+        "power_consumption",
+        "water_consumption",
+    ]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "area": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_industrial(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/industrial")
+    retriever = ApiRetriever(
+        # f"https://sfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = ["duration", "task_count", "mileage"]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "area": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_delivery(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/delivery")
+    retriever = ApiRetriever(
+        # f"https://sfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = ["task_count", "duration", "mileage", "table_count", "tray_count"]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "task_count": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_cruise(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/cruise")
+    retriever = ApiRetriever(
+        # f"https://sfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = ["duration", "task_count", "mileage"]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "area": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_leading(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/lead")
+    retriever = ApiRetriever(
+        # f"httpssfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = ["duration", "task_count", "mileage"]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "area": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True, key="lead")
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_solicit(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "analysis",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("shops/solicit")
+    retriever = ApiRetriever(
+        # f"httpssfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+
+    vars_to_plot = ["duration", "task_count", "mileage"]
+
+    # Create figure and plot
+    fig = px.line(
+        df,
+        x="task_time",
+        y=vars_to_plot[0],
+        title="Cleaning Task",
+        labels={"task_time": "Date", "area": "Float"},
+    )
+
+    if __name__ != "__main__":
+        st.plotly_chart(fig, use_container_width=True, key="solicit")
+    else:
+        print(df.head())
+
+
+def retrieve_and_plot_shop_robots_general(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "statistics",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("robots/general")
+    retriever = ApiRetriever(
+        # f"httpssfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame(encoded_json["data"]["chart"])
+    try:
+        for el in encoded_json["data"]["chart"]:
+            if el not in df.columns:
+                df2 = pd.DataFrame(encoded_json[el])
+                df = pd.concat([df, df2], axis=1)
+    except Exception as e:
+        raise Exception("Error occurred during DataFrame concatenation: ", e)
+
+    vars_to_plot = ["bind_count", "active_count", "bind_rate", "active_rate"]
+
+    # Create figure and plot
+    try:
+        fig = px.bar(
+            df,
+            x="product_name",
+            y=[vars_to_plot[0], vars_to_plot[1]],
+            title="Cleaning Task",
+            labels={"task_time": "Date", "area": "Float"},
+        )
+        if __name__ != "__main__":
+            st.plotly_chart(fig, use_container_width=True, key="lead")
+
+    except Exception:
+        st.warning(WARNING_MESSAGE)
+
+
+def retrieve_and_plot_shop_robots_operations(
+    start_time: datetime,
+    end_time: datetime,
+    shop_id: int = 0,
+    time_unit: Literal["day", "hour"] = "day",
+    timezone_offset: int = 0,
+):
+    start_time_converted = dt_to_sec(start_time)
+    end_time_converted = dt_to_sec(end_time)
+
+    constructor = ApiUriConstructor(
+        BASE_ADDRESS,
+        "statistics",
+        start_time_converted,
+        end_time_converted,
+        541100015,
+        "hour",
+    )
+
+    uri = constructor.build_uri("robots/operations")
+    retriever = ApiRetriever(
+        # f"httpssfscon.tmkhosting.net/analysis/shops/general?start_time={start_time_converted}&end_time={end_time_converted}&shop_id={shop_id}&time_unit={time_unit}&timezone_offset={timezone_offset}",
+        uri,
+        API_KEY,
+    )
+
+    encoded_json = retriever.get_request()
+    # return encoded_json["data"]["chart"]
+    df = pd.DataFrame([encoded_json["data"]["summary"]])
+    st.dataframe(df)
+    return
+
+    vars_to_plot = ["duration", "mileage", "task_count", "area"]
+
+    # Create figure and plot
+    try:
+        fig = px.bar(
+            df,
+            x="product_name",
+            y=[vars_to_plot[0], vars_to_plot[1]],
+            title="Cleaning Task",
+            labels={"task_time": "Date", "area": "Float"},
+        )
+        if __name__ != "__main__":
+            st.plotly_chart(fig, use_container_width=True, key="lead")
+
+    except Exception:
+        st.warning(WARNING_MESSAGE)
+
+
 if __name__ == "__main__":
     print(
-        retrieve_and_plot_shop_analysis(
-            start_time=datetime(2025, 10, 1), end_time=(datetime(2025, 10, 31))
+        retrieve_and_plot_shop_robots_general(
+            start_time=datetime(2025, 9, 1), end_time=(datetime(2025, 10, 31))
         )
     )
-    constructor = ApiUriConstructor(
-        BASE_ADDRESS, "analysis", 1762300000, 1762470001, 541100015
-    )
-    res = constructor.build_uri("shops/cleaning/detail")
-    print(res)
+
+    if False:
+        constructor = ApiUriConstructor(
+            BASE_ADDRESS, "analysis", 1762300000, 1762470001, 541100015
+        )
+        res = constructor.build_uri("shops/cleaning/detail")
+        print(res)
