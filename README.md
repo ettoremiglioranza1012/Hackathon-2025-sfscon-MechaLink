@@ -64,6 +64,8 @@
 - **Task Management** - Track greeter, recovery, and call tasks
 - **Performance KPIs** - Duration, mileage, and stay duration metrics
 
+![Delivery-demo](./assets/GIFs/CleanShot 2025-11-08 at 11.13.23.gif)
+
 #### 🏭 Industrial Robot Monitoring
 
 - **Warehouse Layout** - Industrial facility visualization with racks, loading zones, and workstations
