@@ -20,6 +20,8 @@ except Exception:
 
 WARNING_MESSAGE = "Ooops, it appears a problem occurred with this plot"
 BASE_ADDRESS = "https://sfscon.tmkhosting.net"
+# Serving layer API address (can be overridden with environment variable)
+SERVING_LAYER_ADDRESS = os.getenv("SERVING_LAYER_ADDRESS", "http://localhost:8000")
 
 # IMPORTANT: all these endpoints only require three inputs:
 # 1. start_time: unix timestamp (reported as int seconds)
@@ -140,6 +142,57 @@ def dt_to_sec(dt: datetime) -> int:
     return int(dt.timestamp())
 
 
+def get_shops_from_api(api_base_url: str | None = None) -> list[dict]:
+    """
+    Retrieve list of shops from the API endpoint.
+    
+    Args:
+        api_base_url: Optional base URL for the API. If not provided, uses SERVING_LAYER_ADDRESS.
+    
+    Returns:
+        List of dictionaries containing shop information (shop_id, shop_name, etc.)
+    """
+    if api_base_url is None:
+        api_base_url = SERVING_LAYER_ADDRESS
+    
+    try:
+        # Try the serving layer endpoint first
+        shops_endpoint = f"{api_base_url}/shops"
+        response = req.get(shops_endpoint, timeout=5)
+        
+        if response.status_code == 200:
+            data = response.json()
+            # Handle different response formats
+            if "shops" in data:
+                return data["shops"]
+            elif "data" in data and "list" in data["data"]:
+                return data["data"]["list"]
+            elif isinstance(data, list):
+                return data
+            else:
+                return []
+        else:
+            # If serving layer fails, try the external API
+            # Check if there's a shops endpoint in the external API
+            external_shops_endpoint = f"{BASE_ADDRESS}/shops"
+            if BASE_ADDRESS != api_base_url:
+                response = req.get(
+                    external_shops_endpoint,
+                    headers={"x-key": API_KEY} if API_KEY else {},
+                    timeout=5
+                )
+                if response.status_code == 200:
+                    data = response.json()
+                    if "data" in data and "list" in data["data"]:
+                        return data["data"]["list"]
+                    elif isinstance(data, list):
+                        return data
+            return []
+    except Exception as e:
+        # Return empty list on error - error handling is done in the UI
+        return []
+
+
 def retrieve_and_plot_shop_analysis(
     start_time: datetime,
     end_time: datetime,
@@ -170,13 +223,28 @@ def retrieve_and_plot_shop_analysis(
     # return encoded_json["data"]["chart"]
     df = pd.DataFrame(encoded_json["data"]["chart"])
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=["lively_count", "silent_count", "new_count"],
         title="Shop Activity Over Time",
-        labels={"task_time": "Date", "value": "Count", "variable": "Type"},
+        labels={
+            "task_time": "Date/Time",
+            "lively_count": "Lively Count",
+            "silent_count": "Silent Count",
+            "new_count": "New Count",
+            "value": "Count",
+            "variable": "Activity Type"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Count",
+        legend_title="Activity Type",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -213,13 +281,24 @@ def retrieve_and_plot_shop_cleaning_detail(
     # return encoded_json["data"]["chart"]
     df = pd.DataFrame(encoded_json["chart"])
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=["running_task_count"],
-        title="Cleaning Details",
-        labels={"task_time": "Date", "running_task_count": "Count"},
+        title="Cleaning Task Details - Running Tasks Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "running_task_count": "Running Tasks",
+            "value": "Number of Tasks"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Number of Running Tasks",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -263,13 +342,24 @@ def retrieve_and_plot_shop_cleaning(
         "water_consumption",
     ]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "area": "Float"},
+        title="Cleaning Task - Area Coverage Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "area": "Area Cleaned (m²)",
+            "value": "Area (m²)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Area Cleaned (m²)",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -310,13 +400,24 @@ def retrieve_and_plot_shop_industrial(
 
     vars_to_plot = ["duration", "task_count", "mileage"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "area": "Float"},
+        title="Industrial Tasks - Duration Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "duration": "Duration (minutes)",
+            "value": "Duration (min)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Duration (minutes)",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -357,13 +458,24 @@ def retrieve_and_plot_shop_delivery(
 
     vars_to_plot = ["task_count", "duration", "mileage", "table_count", "tray_count"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "task_count": "Float"},
+        title="Delivery Tasks - Task Count Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "task_count": "Number of Tasks",
+            "value": "Task Count"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Number of Delivery Tasks",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -404,13 +516,24 @@ def retrieve_and_plot_shop_cruise(
 
     vars_to_plot = ["duration", "task_count", "mileage"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "area": "Float"},
+        title="Cruise Tasks - Duration Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "duration": "Duration (minutes)",
+            "value": "Duration (min)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Duration (minutes)",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -451,13 +574,24 @@ def retrieve_and_plot_shop_leading(
 
     vars_to_plot = ["duration", "task_count", "mileage"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "area": "Float"},
+        title="Leading Tasks - Duration Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "duration": "Duration (minutes)",
+            "value": "Duration (min)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Duration (minutes)",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -498,13 +632,24 @@ def retrieve_and_plot_shop_solicit(
 
     vars_to_plot = ["duration", "task_count", "mileage"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     fig = px.line(
         df,
         x="task_time",
         y=vars_to_plot[0],
-        title="Cleaning Task",
-        labels={"task_time": "Date", "area": "Float"},
+        title="Solicit Tasks - Duration Over Time",
+        labels={
+            "task_time": "Date/Time",
+            "duration": "Duration (minutes)",
+            "value": "Duration (min)"
+        },
+    )
+    
+    # Update layout for better readability
+    fig.update_layout(
+        xaxis_title="Date/Time",
+        yaxis_title="Duration (minutes)",
+        hovermode="x unified"
     )
 
     if __name__ != "__main__":
@@ -552,17 +697,32 @@ def retrieve_and_plot_shop_robots_general(
 
     vars_to_plot = ["bind_count", "active_count", "bind_rate", "active_rate"]
 
-    # Create figure and plot
+    # Create figure and plot with proper labels
     try:
         fig = px.bar(
             df,
             x="product_name",
             y=[vars_to_plot[0], vars_to_plot[1]],
-            title="Cleaning Task",
-            labels={"task_time": "Date", "area": "Float"},
+            title="Robot Statistics - Bind and Active Counts by Model",
+            labels={
+                "product_name": "Robot Model",
+                "bind_count": "Bound Robots",
+                "active_count": "Active Robots",
+                "value": "Count"
+            },
+            barmode="group"
         )
+        
+        # Update layout for better readability
+        fig.update_layout(
+            xaxis_title="Robot Model",
+            yaxis_title="Number of Robots",
+            legend_title="Metric",
+            hovermode="x unified"
+        )
+        
         if __name__ != "__main__":
-            st.plotly_chart(fig, use_container_width=True, key="lead")
+            st.plotly_chart(fig, use_container_width=True, key="robots_general")
 
     except Exception:
         st.warning(WARNING_MESSAGE)
@@ -597,25 +757,14 @@ def retrieve_and_plot_shop_robots_operations(
     encoded_json = retriever.get_request()
     # return encoded_json["data"]["chart"]
     df = pd.DataFrame([encoded_json["data"]["summary"]])
-    st.dataframe(df)
-    return
-
-    vars_to_plot = ["duration", "mileage", "task_count", "area"]
-
-    # Create figure and plot
-    try:
-        fig = px.bar(
-            df,
-            x="product_name",
-            y=[vars_to_plot[0], vars_to_plot[1]],
-            title="Cleaning Task",
-            labels={"task_time": "Date", "area": "Float"},
-        )
-        if __name__ != "__main__":
-            st.plotly_chart(fig, use_container_width=True, key="lead")
-
-    except Exception:
-        st.warning(WARNING_MESSAGE)
+    
+    # Display the operations summary as a formatted dataframe
+    st.subheader("Robot Operations Summary")
+    st.dataframe(
+        df,
+        use_container_width=True,
+        hide_index=True
+    )
 
 
 if __name__ == "__main__":
