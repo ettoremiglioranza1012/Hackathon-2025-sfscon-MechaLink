@@ -5,9 +5,9 @@ from pages import (
     robotCleaningMonitoring,
     robotDeliveringMonitoring,
     robotLiftingMonitoring,
-    predictiveAnalytics
+    predictiveAnalytics,
 )
-from pages import delivery, industrial
+from pages import delivery, industrial, launch_task
 from utils.helpers import get_shops_from_api
 import os
 
@@ -461,10 +461,9 @@ PAGE_SECTIONS = {
     "Task": {
         "🚚 Delivery": delivery,
         "🏭 Industrial": industrial,
+        "🚀 Launch Task": launch_task,
     },
-    "Configuration": {
-        "⚙️ Settings": settings,
-    },
+    "Configuration": {"⚙️ Settings": settings},
 }
 
 # Render page sections with headers

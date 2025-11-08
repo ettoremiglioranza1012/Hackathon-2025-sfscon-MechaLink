@@ -271,6 +271,87 @@ CREATE TABLE IF NOT EXISTS robot_movement (
     position_z  DOUBLE PRECISION,
     inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- tabella dove il computation layer può salvare le sue stime
+CREATE TABLE IF NOT EXISTS task_eta (
+    id SERIAL PRIMARY KEY,
+    src_table  TEXT NOT NULL,
+    src_pk     BIGINT,          -- oppure TEXT se ti serve
+    task_id    TEXT,
+    shop_id    BIGINT,
+    sn         TEXT,
+    ending_time TIMESTAMP,
+    computed_at TIMESTAMP DEFAULT now()
+);
+
+
+CREATE TABLE IF NOT EXISTS robot_task_capability (
+    id           BIGSERIAL PRIMARY KEY,
+    sn           TEXT NOT NULL REFERENCES robots(sn),
+    task_type    TEXT NOT NULL,  -- delivery | cleaning | industrial
+    task_subtype TEXT,           -- greeter | call | recovery | floor | spot ... dipende dal tipo
+
+    -- evita duplicati sulla stessa combinazione
+    UNIQUE (sn, task_type, task_subtype)
+);
+
+-- 1. Cleaning
+INSERT INTO robot_task_capability (sn, task_type, task_subtype)
+SELECT DISTINCT
+    robot_sn AS sn,
+    'cleaning' AS task_type,
+    NULL AS task_subtype
+FROM cleaning_task
+ON CONFLICT (sn, task_type, task_subtype) DO NOTHING;
+
+-- 2. Delivery greeter
+INSERT INTO robot_task_capability (sn, task_type, task_subtype)
+SELECT DISTINCT
+    sn,
+    'delivery' AS task_type,
+    'greeter' AS task_subtype
+FROM robot_delivery_greeter_task
+ON CONFLICT (sn, task_type, task_subtype) DO NOTHING;
+
+-- 3. Delivery call
+INSERT INTO robot_task_capability (sn, task_type, task_subtype)
+SELECT DISTINCT
+    sn,
+    'delivery' AS task_type,
+    'call' AS task_subtype
+FROM robot_delivery_call_task
+ON CONFLICT (sn, task_type, task_subtype) DO NOTHING;
+
+-- 4. Delivery recovery
+INSERT INTO robot_task_capability (sn, task_type, task_subtype)
+SELECT DISTINCT
+    sn,
+    'delivery' AS task_type,
+    'recovery' AS task_subtype
+FROM robot_delivery_recovery_task
+ON CONFLICT (sn, task_type, task_subtype) DO NOTHING;
+
+-- 5. Industrial lifting
+INSERT INTO robot_task_capability (sn, task_type, task_subtype)
+SELECT DISTINCT
+    sn,
+    'industrial' AS task_type,
+    'lifting' AS task_subtype
+FROM robot_industrial_lifting_task
+ON CONFLICT (sn, task_type, task_subtype) DO NOTHING;
+
+-- tabella dove il computation layer può salvare le sue stime
+CREATE TABLE IF NOT EXISTS task_eta (
+    id SERIAL PRIMARY KEY,
+    src_table  TEXT NOT NULL,
+    src_pk     BIGINT,          -- oppure TEXT se ti serve
+    task_id    TEXT,
+    shop_id    BIGINT,
+    sn         TEXT,
+    ending_time TIMESTAMP,
+    computed_at TIMESTAMP DEFAULT now()
+);
+
 """)
 
 def main():

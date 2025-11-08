@@ -329,6 +329,8 @@ def add_robot_charge_log(conn, charges_payload: dict):
     print(f"[INFO] robot_charge_log inseriti/aggiornati: {inserted} (robot auto-inseriti: {autoinserted_robots})")
 
 
+
+
 def main():
     add_company_shop_data(conn, s.shops_example)
     add_robot_data(conn, r.robots_example)

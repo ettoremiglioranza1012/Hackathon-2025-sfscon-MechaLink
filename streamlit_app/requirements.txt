@@ -2,5 +2,6 @@ streamlit
 pandas
 matplotlib
 dotenv
-plotly.express
 psycopg[binary]
+plotly.express
+

@@ -42,4 +42,15 @@ services:
     volumes:
       - ./streamlit_app:/app
 
+  computation-layer:
+    build:
+      context: ./src/computation_layer
+      dockerfile: Dockerfile
+    container_name: computation-layer
+    environment:
+      DB_DSN: postgresql://admin:admin@postgres:5432/mydb
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
 volumes: {}
