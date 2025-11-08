@@ -711,6 +711,23 @@ curl -X GET "http://localhost:8000/delivery/greeter?shop_id=520400008&limit=50" 
 
 ---
 
+# Troubleshooting
+
+This section contains useful info on how to fix known bugs.
+
+## Volumes not loading correctly on Postgres startup
+
+At times, when running the program using `make run-app` Docker might complain about not being able to mount some of its volumes.
+
+To fix this:
+
+1. run `make clean-app` to delete the volumes that might be causing the issue.
+2. rebuild the app using `make build-app`
+
+These steps have been known to solve the issue.
+
+---
+
 ## 🗄️ Database Schema
 
 ### Core Tables
@@ -903,6 +920,11 @@ We put up a collection of GIFs to understand the basic functionality of our solu
 #### Industrial Analysis
 
 ![industrial-demo](assets/GIFs/industrial-demo.gif)
+
+#### Predictive Analysis
+
+![predictive-demo](assets/GIFs/predictive-demo.gif)
+![predictive-demo2](assets/GIFs/predictive-demo2.gif)
 
 ---
 
