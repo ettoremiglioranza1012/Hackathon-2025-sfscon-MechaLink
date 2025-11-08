@@ -1,5 +1,6 @@
 import streamlit as st
 from pages import analytics, settings, task, robotCleaningMonitoring, robotDeliveringMonitoring, robotLiftingMonitoring
+from pages import delivery, industrial
 from utils.helpers import get_shops_from_api
 import os
 
@@ -443,9 +444,13 @@ PAGE_SECTIONS = {
         "🤖 Delivery Monitoring": robotDeliveringMonitoring,
         "🤖 Inventory Monitoring": robotLiftingMonitoring,
     },
+    "Task":{
+        "🚚 Delivery": delivery,
+        "🏭 Industrial": industrial,
+        "🧼 Cleaning": cleaning
+    },
     "Configuration": {
         "⚙️ Settings": settings,
-        "📋 Tasks": task,
 
     }
 }
