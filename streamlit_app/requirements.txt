@@ -3,3 +3,4 @@ pandas
 matplotlib
 dotenv
 plotly.express
+psycopg[binary]

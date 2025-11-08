@@ -30,6 +30,11 @@ services:
     build: streamlit_app
     environment:
       SERVING_LAYER_ADDRESS: http://api:8000
+      DB_HOST: postgres
+      DB_USER: admin
+      DB_PASSWORD: admin
+      DB_NAME: mydb
+      DB_PORT: 5432
     depends_on:
       - api
     ports:
