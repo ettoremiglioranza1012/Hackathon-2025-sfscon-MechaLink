@@ -1,4 +1,4 @@
-# 🤖 MechaLink - Intelligent Robot Management Platform
+# MechaLink - Intelligent Robot Management Platform
 
 <div align="center">
 
