@@ -13,45 +13,58 @@
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Architecture](#architecture)
-- [Getting Started](#getting-started)
-- [Dashboard Capabilities](#dashboard-capabilities)
-- [Customization](#customization)
-- [API Documentation](#api-documentation)
-- [Troubleshooting](#troubleshooting)
-- [Database Schema](#database-schema)
-- [Development](#development)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
-- [Additional Resources](#additional-resources)
+- [ℹ️ Project Introduction](#project-introduction)
+- [🧭 Overview](#overview)
+- [📌 Key Features](#key-features)
+- [🏗️ Architecture](#architecture)
+- [🚀 Getting Started](#getting-started)
+- [📊 Dashboard Capabilities](#dashboard-capabilities)
+- [🛠️ Customization](#customization)
+- [🔌 API Documentation](#api-documentation)
+- [🩺 Troubleshooting](#troubleshooting)
+- [🗄️ Database Schema](#database-schema)
+- [💻 Development](#development)
+- [📄 License](#license)
+- [🤝 Acknowledgments](#acknowledgments)
+- [📚 Additional Resources](#additional-resources)
 
 ---
 
-## 🌟 Overview
+<a id="project-introduction"></a>
+## ℹ️ Project Introduction
+
+This repository was created for the **NOI Hackathons sfscon 2025** contest.  
+- Official page of the contest: [https://hackathon.bz.it](https://hackathon.bz.it)
+- Official page of the company that provided our challenge, with insights on robots: [https://robotics.telmekom.com/it](https://robotics.telmekom.com/it)  
+
+**Challenge description:**  
+In this challenge, participants were asked to develop an app, dashboard or web interface that connects to a server exposing APIs to interact with different classes of robots. The available data includes both live and static information, and teams are free to decide how best to use it. Each team also had the opportunity to test their solution as a proof of concept with real robots of the chosen class, in scheduled time slots. All projects must be open-source to encourage sharing and learning.
+
+<a id="overview"></a>
+## 🧭 Overview
 
 **MechaLink** is a state-of-the-art robot fleet management platform designed to provide comprehensive monitoring, analytics, and operational insights for diverse robotic systems. Built with modern technologies and a focus on scalability, MechaLink enables businesses to optimize their robotic operations across multiple locations.
 
 ### What Makes MechaLink Different?
 
-- **🎨 Beautiful & Intuitive UI** - Modern Streamlit interface with custom styling and responsive design
-- **📊 Real-Time Monitoring** - Live robot tracking with interactive visualizations
-- **🏭 Multi-Robot Support** - Cleaning, delivery, and industrial robots in one platform
-- **🔧 Highly Customizable** - Adapt dashboards to your specific business needs
-- **🏪 Multi-Location Ready** - Manage robots across multiple shops/facilities
-- **📈 Advanced Analytics** - Deep insights into performance, efficiency, and operations
-- **🎭 Demo Mode** - Test features with sample data before going live
+- **Beautiful & Intuitive UI** - Modern Streamlit interface with custom styling and responsive design
+- **Real-Time Monitoring** - Live robot tracking with interactive visualizations
+- **Multi-Robot Support** - Cleaning, delivery, and industrial robots in one platform
+- **Highly Customizable** - Adapt dashboards to your specific business needs
+- **Multi-Location Ready** - Manage robots across multiple shops/facilities
+- **Advanced Analytics** - Deep insights into performance, efficiency, and operations
+- **Demo Mode** - Test features with sample data before going live
 
 ---
 
-## ✨ Key Features
+<a id="key-features"></a>
+## 📌 Key Features
 
 ### 1. **Comprehensive Robot Monitoring**
 
-#### 🧹 Cleaning Robot Monitoring
+#### Cleaning Robot Monitoring
 
 - **Interactive Floor Plans** - Real-time visualization of cleaning robots with realistic billiard room/gaming lounge layouts
 - **Movement Tracking** - Trail visualization showing complete cleaning paths
@@ -59,7 +72,7 @@
 - **Status Indicators** - Battery level, cleaning mode, and operational status
 - **Timeline Controls** - Replay robot movements and analyze patterns
 
-#### 🚚 Delivery Robot Monitoring
+#### Delivery Robot Monitoring
 
 - **Restaurant Layout Visualization** - Dynamic floor plans with tables, kitchen, bar, and service areas
 - **Delivery Tracking** - Monitor food/item delivery from kitchen to tables
@@ -69,7 +82,7 @@
 
 ![Delivery-demo](./assets/GIFs/delivering-demo.gif)
 
-#### 🏭 Industrial Robot Monitoring
+#### Industrial Robot Monitoring
 
 - **Warehouse Layout** - Industrial facility visualization with racks, loading zones, and workstations
 - **Lifting Operations** - Animated robotic arm with lifting phases (idle, lifting, moving, lowering)
@@ -79,28 +92,28 @@
 
 ### 2. **Advanced Analytics Dashboard**
 
-#### 📊 Shop Activity Analysis
+#### Shop Activity Analysis
 
 - Total tasks completed over time
 - Robot activity patterns and trends
 - Peak operation hours identification
 - Multi-shop comparison capabilities
 
-#### 🧹 Cleaning Performance
+#### Cleaning Performance
 
 - Area coverage statistics
 - Cleaning efficiency metrics
 - Water and power consumption tracking
 - Maintenance scheduling insights
 
-#### 🤖 Robot Statistics
+#### Robot Statistics
 
 - Fleet-wide performance overview
 - Individual robot performance
 - Error rates and uptime analysis
 - Resource utilization metrics
 
-#### 📅 Time-Based Analysis
+#### Time-Based Analysis
 
 - Custom date range selection
 - Historical trend analysis
@@ -152,6 +165,7 @@
 
 ---
 
+<a id="architecture"></a>
 ## 🏗️ Architecture
 
 MechaLink follows a modern, microservices-inspired architecture:
@@ -214,6 +228,7 @@ MechaLink follows a modern, microservices-inspired architecture:
 
 ---
 
+<a id="getting-started"></a>
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -290,9 +305,10 @@ cd streamlit_app && streamlit run app.py
 
 ---
 
+<a id="dashboard-capabilities"></a>
 ## 📊 Dashboard Capabilities
 
-### 🏠 Home Dashboard
+### Home Dashboard
 
 Your command center for intelligent robot operations:
 
@@ -302,7 +318,7 @@ Your command center for intelligent robot operations:
 - **Recent Activity** - Latest robot operations
 - **System Status** - Overall health indicators
 
-### 📈 Analytics Page
+### Analytics Page
 
 Comprehensive performance insights:
 
@@ -334,7 +350,7 @@ Comprehensive performance insights:
 - Trend comparison
 - Seasonal insights
 
-### 🤖 Robot Monitoring Pages
+### Robot Monitoring Pages
 
 #### Cleaning Robot Monitoring
 
@@ -399,7 +415,7 @@ Comprehensive performance insights:
 - Optimize warehouse layout
 - Measure productivity
 
-### 🚚 Delivery Task Management
+### Delivery Task Management
 
 **Three Task Types:**
 
@@ -434,7 +450,7 @@ Comprehensive performance insights:
 - Temporal trend analysis
 - Raw data tables for deep dives
 
-### 🏭 Industrial Task Management
+### Industrial Task Management
 
 **Lifting Operations:**
 
@@ -447,7 +463,7 @@ Comprehensive performance insights:
 - Temporal trends
 - Robot identification details (SN, MAC, Model)
 
-### ⚙️ Settings Page
+### Settings Page
 
 **Customization Options:**
 
@@ -462,7 +478,8 @@ Comprehensive performance insights:
 
 ---
 
-## 🔧 Customization
+<a id="customization"></a>
+## 🛠️ Customization
 
 MechaLink is designed to be **highly customizable** to accommodate diverse customer needs:
 
@@ -474,7 +491,7 @@ MechaLink is designed to be **highly customizable** to accommodate diverse custo
 # streamlit_app/app.py
 st.set_page_config(
     page_title="Your Company Name",
-    page_icon="🤖",  # Custom icon
+    page_icon="app_icon.png",  # Custom icon path or name
     layout="wide",
 )
 ```
@@ -539,7 +556,7 @@ Example structure:
 ```python
 # streamlit_app/pages/robot_security_monitoring.py
 def render():
-    st.title("🔒 Security Robot Monitoring")
+    st.title("Security Robot Monitoring")
     # Your custom monitoring logic
 ```
 
@@ -619,10 +636,10 @@ def transform_custom_data(raw_data):
 ```python
 # Check custom conditions
 if robot_battery < threshold:
-    st.warning(f"⚠️ Low battery alert for {robot_name}")
+    st.warning(f"Low battery alert for {robot_name}")
 
 if task_duration > max_duration:
-    st.error(f"🚨 Task exceeding time limit: {task_id}")
+    st.error(f"Task exceeding time limit: {task_id}")
 ```
 
 ### 9. **Export Customization**
@@ -643,6 +660,7 @@ if st.button("Send Email Report"):
 
 ---
 
+<a id="api-documentation"></a>
 ## 🔌 API Documentation
 
 ### Base URL
@@ -712,7 +730,8 @@ curl -X GET "http://localhost:8000/delivery/greeter?shop_id=520400008&limit=50" 
 
 ---
 
-## Troubleshooting
+<a id="troubleshooting"></a>
+## 🩺 Troubleshooting
 
 This section contains useful info on how to fix known bugs.
 
@@ -729,6 +748,7 @@ These steps have been known to solve the issue.
 
 ---
 
+<a id="database-schema"></a>
 ## 🗄️ Database Schema
 
 ### Core Tables
@@ -787,6 +807,7 @@ company (1) ──┬── (N) shop
 
 ---
 
+<a id="development"></a>
 ## 💻 Development
 
 ### Project Structure
@@ -870,13 +891,15 @@ mechalink/
 
 ---
 
+<a id="license"></a>
 ## 📄 License
 
 This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+<a id="acknowledgments"></a>
+## 🤝 Acknowledgments
 
-- Built with ❤️ by Team 11 (DragAndDrop)
+- Built by Team 11 (DragAndDrop)
 
   - [Anthony Tricarico](https://github.com/anthony-tricarico)
   - [Matteo Massari](https://github.com/matteo-massari)
@@ -891,6 +914,7 @@ This project is licensed under the GNU AFFERO GENERAL PUBLIC LICENSE - see the [
 
 ---
 
+<a id="additional-resources"></a>
 ## 📚 Additional Resources
 
 ### Demo GIFs
@@ -931,6 +955,6 @@ We put up a collection of GIFs to understand the basic functionality of our solu
 
 <div align="center">
 
-⭐ Star us on GitHub if you find MechaLink helpful!
+Star us on GitHub if you find MechaLink helpful!
 
 </div>
